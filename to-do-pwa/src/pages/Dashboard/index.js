@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import * as S from "./styles"
 
 const Dashboard = () => {
-    const [user, setUser] = useState(null);
-    const [ShowUserPage, setShowUserPage] = useState(false)
     const [tasks, setTasks] = useState([]);
     const [description, setDescription] = useState('');
     const [time, setTime] = useState('');
@@ -42,9 +40,7 @@ const Dashboard = () => {
     };
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
-            } else {
+            if (!user) {
                 navigate('/');
             }
         });
@@ -55,16 +51,11 @@ const Dashboard = () => {
     return (
         <>
             <S.ShowUserPageToogleContainer>
-                <S.ShowUserPageToogle onClick={() => setShowUserPage(!ShowUserPage)}>{ShowUserPage ? 'Ver lista' : 'Ver perfil'}</S.ShowUserPageToogle>
+                <S.ShowUserPageToogle onClick={() => navigate('/userprofile')}>Ver perfil</S.ShowUserPageToogle>
             </S.ShowUserPageToogleContainer>
-            {ShowUserPage ? (
 
-                <S.ProfilePage>
-                    <h1>Bem vindo, {user?.email}</h1>
-                    <p>ID de usuario: {user?.uid}</p>
-                </S.ProfilePage>
 
-            ) : <S.Container>
+            <S.Container>
                 <h1>To-Do List</h1>
 
                 <S.TaskForm onSubmit={handleAddTask}>
@@ -96,7 +87,7 @@ const Dashboard = () => {
                         </S.TaskItem>
                     ))}
                 </S.TaskList>
-            </S.Container>}
+            </S.Container>
         </>
 
     );
